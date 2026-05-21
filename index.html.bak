@@ -39,6 +39,7 @@ body{font-family:Arial,sans-serif;background:var(--c1);color:var(--c9);min-heigh
 .g2{grid-template-columns:1fr 1fr}
 .g3{grid-template-columns:1fr 1fr 1fr}
 .g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
 .fg{display:flex;flex-direction:column;gap:5px}
 .lbl{font-size:.78rem;font-weight:700;color:var(--c7)}
 .req{color:var(--vr);margin-left:2px}
@@ -47,6 +48,7 @@ body{font-family:Arial,sans-serif;background:var(--c1);color:var(--c9);min-heigh
 .fc:focus{border-color:var(--vm);box-shadow:0 0 0 3px rgba(45,138,69,.13)}
 .fc.ferr{border-color:var(--vr)!important;box-shadow:0 0 0 3px rgba(229,57,53,.13)!important;background:#fff8f8}
 .fc.fok{border-color:var(--vm)!important;box-shadow:0 0 0 3px rgba(45,138,69,.10)!important}
+.fc:disabled{background:var(--c1);color:var(--c5);cursor:not-allowed;opacity:.78}
 textarea.fc{resize:vertical;min-height:66px}
 .fbcel{font-size:.73rem;font-weight:600;min-height:17px;display:block;padding-top:2px}
 .fbcel.err{color:var(--vr)}.fbcel.ok{color:var(--vm)}.fbcel.nth{color:transparent}
@@ -76,21 +78,13 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
 .emptico{font-size:1.8rem;display:block;margin-bottom:5px;opacity:.45}
 .bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.69rem;font-weight:700}
 .bv{background:var(--vs);color:var(--vd)}.ba{background:var(--azc);color:var(--az)}
-.bdg-click{cursor:pointer;transition:transform .15s,box-shadow .15s}
-.bdg-click:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.12)}
-.detrow{background:var(--c0)}
-.detbox{margin:4px 0;padding:14px;border:1px solid var(--c2);border-radius:var(--r2);background:var(--br);box-shadow:var(--s1)}
-.detttl{font-size:.78rem;font-weight:700;color:var(--c7);margin-bottom:10px}
-.detgrid{display:grid;gap:8px}
-.detitem{display:grid;grid-template-columns:1.2fr .9fr .9fr .9fr;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--c2);border-radius:var(--r1);background:var(--c0);font-size:.78rem}
-.detitem strong{color:var(--c9)}
-.detmut{color:var(--c5)}
-@media(max-width:768px){.detitem{grid-template-columns:1fr}}
 .sp{color:var(--az)!important;font-weight:700}
 .sn{color:var(--vr)!important;font-weight:700}
 .sz{color:var(--c5)!important;font-weight:700}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;font-family:inherit;font-size:.85rem;font-weight:700;border:none;border-radius:var(--r1);cursor:pointer;transition:all .18s;white-space:nowrap;user-select:none}
 .btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.btn:disabled:active{transform:none}
 .bpri{background:linear-gradient(135deg,var(--vm),var(--vd));color:var(--br);box-shadow:0 2px 6px rgba(26,92,42,.32)}
 .bpri:hover{box-shadow:0 4px 14px rgba(26,92,42,.42)}
 .bsec{background:var(--c1);color:var(--c7);border:1.5px solid var(--c2)}
@@ -115,7 +109,7 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
 @media(max-width:768px){
   .hdr-in{padding:11px 13px}.hdr-t{font-size:.97rem}
   .wrap{padding:11px 9px 48px}.cbody{padding:14px}
-  .g2,.g3,.g4{grid-template-columns:1fr}
+  .g2,.g3,.g4,.g5{grid-template-columns:1fr}
   .bar{flex-direction:column}.bar .btn{width:100%;justify-content:center}
   .toast-area{right:9px;left:9px;bottom:9px}.toast{max-width:100%}
 }
@@ -152,6 +146,7 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
         <div class="fg">
           <label class="lbl" for="dataJogo">Data do Jogo <span class="req">*</span></label>
           <input type="date" id="dataJogo" class="fc"/>
+          <span id="fbDataJogo" class="fbcel nth">&#160;</span>
         </div>
         <div class="fg">
           <label class="lbl" for="numJogo">Numero do Jogo <span class="req">*</span></label>
@@ -159,10 +154,14 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
         </div>
       </div>
       <div class="dsep"><span>Despesas do Jogo</span><hr/></div>
-      <div class="g g4">
+      <div class="g g5">
         <div class="fg">
           <label class="lbl" for="pagtoJuiz">Pagamento do Juiz</label>
           <div class="iw"><span class="ipre">R$</span><input type="number" id="pagtoJuiz" class="fc" step="0.01" value="0" min="0"/></div>
+        </div>
+        <div class="fg">
+          <label class="lbl" for="goleiro">Pagamento do Goleiro</label>
+          <div class="iw"><span class="ipre">R$</span><input type="number" id="goleiro" class="fc" step="0.01" value="0" min="0"/></div>
         </div>
         <div class="fg">
           <label class="lbl" for="aluguelCampo">Aluguel do Campo</label>
@@ -215,8 +214,16 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
             <span id="fbTel" class="fbcel nth">&#160;</span>
           </div>
           <div class="fg">
-            <label class="lbl" for="posJog">Posicao</label>
-            <input type="text" id="posJog" class="fc" placeholder="Goleiro, Atacante..."/>
+            <label class="lbl" for="posJog">Posicao <span class="req">*</span></label>
+            <select id="posJog" class="fc" required>
+              <option value="">Selecione</option>
+              <option value="LATERAL ESQUERDO">LATERAL ESQUERDO</option>
+              <option value="LATERAL DIREITO">LATERAL DIREITO</option>
+              <option value="ZAGUEIRO">ZAGUEIRO</option>
+              <option value="VOLANTE">VOLANTE</option>
+              <option value="MEIA">MEIA</option>
+              <option value="ATACANTE">ATACANTE</option>
+            </select>
           </div>
         </div>
         <div class="g g3" style="margin-top:12px">
@@ -314,6 +321,9 @@ localforage.config({
 });
 
 var jogadores=[];
+var CAMPOS_DESPESA=["pagtoJuiz","goleiro","aluguelCampo","material","outrosGastos"];
+var CAMPOS_RECEITA=["mensalidade","diaria"];
+var CAMPOS_VALOR=CAMPOS_DESPESA.concat(CAMPOS_RECEITA);
 
 function R(id){return document.getElementById(id)}
 function V(id){var e=R(id);return e?e.value:""}
@@ -332,13 +342,60 @@ function fData(d){
   return p[2]+"/"+p[1]+"/"+p[0]
 }
 
+function hojeISO(){
+  var d=new Date();
+  var m=String(d.getMonth()+1).padStart(2,"0");
+  var dia=String(d.getDate()).padStart(2,"0");
+  return d.getFullYear()+"-"+m+"-"+dia
+}
+
+function dataJogoPassada(){
+  var data=V("dataJogo");
+  return !!data&&data<hojeISO()
+}
+
+function validaDataJogo(avisar){
+  var el=R("dataJogo"),fb=R("fbDataJogo");
+  if(!el)return true;
+  if(!el.value){
+    el.classList.remove("ferr");
+    el.setCustomValidity("");
+    if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
+    return true
+  }
+  if(dataJogoPassada()){
+    var msg="Data do jogo nao pode ser anterior a hoje.";
+    el.classList.add("ferr");
+    el.setCustomValidity(msg);
+    if(fb){fb.className="fbcel err";fb.textContent=msg}
+    if(avisar)toast(msg,"err");
+    return false
+  }
+  el.classList.remove("ferr");
+  el.setCustomValidity("");
+  if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
+  return true
+}
+
+function atualizaBloqueioDataJogo(){
+  var bloquear=dataJogoPassada();
+  var ids=["numJogo","pagtoJuiz","goleiro","aluguelCampo","material",
+    "outrosGastos","descOutros","obsJogo","nomeJog","telJog","posJog",
+    "mensalidade","diaria","btnAdd","btnSalvar"];
+  validaDataJogo(false);
+  ids.forEach(function(id){
+    var el=R(id);
+    if(el)el.disabled=bloquear
+  });
+  document.querySelectorAll(".bdel").forEach(function(btn){btn.disabled=bloquear})
+}
+
 function esc(s){
   return String(s||"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
+    .replace(/&/g,"&")
+    .replace(/</g,"<")
+    .replace(/>/g,">")
     .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;")
 }
 
 function toast(msg,tipo){
@@ -395,13 +452,77 @@ function resetCelular(){
 }
 
 function calcDesp(){
-  var t=(Number(V("pagtoJuiz"))||0)+(Number(V("aluguelCampo"))||0)
+  var t=(Number(V("pagtoJuiz"))||0)+(Number(V("goleiro"))||0)+(Number(V("aluguelCampo"))||0)
        +(Number(V("material"))||0)+(Number(V("outrosGastos"))||0);
   ST("totalDespesas",moeda(t));return t
 }
 
 function calcPreview(){
   ST("prevReceita",moeda((Number(V("mensalidade"))||0)+(Number(V("diaria"))||0)))
+}
+
+function labelCampo(id){
+  var lab=document.querySelector('label[for="'+id+'"]');
+  return lab?lab.textContent.replace(/\s+/g," ").trim():"Valor"
+}
+
+function fbValor(id){
+  var el=R(id);
+  if(!el)return null;
+  var fg=el.closest(".fg");
+  if(!fg)return null;
+  var fb=R("fb_"+id);
+  if(!fb){
+    fb=document.createElement("span");
+    fb.id="fb_"+id;
+    fb.className="fbcel nth";
+    fb.innerHTML="&#160;";
+    fg.appendChild(fb)
+  }
+  return fb
+}
+
+function aplicaValorOk(id){
+  var el=R(id),fb=fbValor(id);
+  if(el){
+    el.classList.remove("ferr");
+    el.setCustomValidity("")
+  }
+  if(fb){
+    fb.className="fbcel nth";
+    fb.innerHTML="&#160;"
+  }
+}
+
+function validaValor(id,avisar){
+  var el=R(id);
+  if(!el)return true;
+  var n=Number(el.value);
+  if(el.value!==""&&!isNaN(n)&&n<0){
+    var msg=labelCampo(id)+" incorreto. Informe um valor igual ou maior que zero.";
+    var fb=fbValor(id);
+    el.classList.add("ferr");
+    el.setCustomValidity(msg);
+    if(fb){
+      fb.className="fbcel err";
+      fb.textContent=msg
+    }
+    if(avisar)toast(msg,"err");
+    return false
+  }
+  aplicaValorOk(id);
+  return true
+}
+
+function validaValores(ids,avisar){
+  for(var i=0;i<ids.length;i++){
+    if(!validaValor(ids[i],avisar)){
+      var el=R(ids[i]);
+      if(el)el.focus();
+      return false
+    }
+  }
+  return true
 }
 
 function calcReceitas(){
@@ -433,7 +554,9 @@ function renderJog(){
         "<td></td>";
       var btn=document.createElement("button");
       btn.type="button";btn.className="btn bdel";btn.textContent="Remover";
+      btn.disabled=dataJogoPassada();
       btn.addEventListener("click",function(){
+        if(!validaDataJogo(true)){atualizaBloqueioDataJogo();return}
         var nome=jogadores[idx].nome;
         jogadores.splice(idx,1);renderJog();
         toast('"'+nome+'" removido.','avs')
@@ -445,8 +568,12 @@ function renderJog(){
 }
 
 function adicionarJogador(){
+  if(!validaDataJogo(true)){atualizaBloqueioDataJogo();var ed=R("dataJogo");if(ed)ed.focus();return}
   var nome=(V("nomeJog")||"").trim();
+  var posicao=(V("posJog")||"").trim();
   if(!nome){toast("Informe o nome do jogador.","avs");var en=R("nomeJog");if(en)en.focus();return}
+  if(!posicao){toast("Selecione a posicao do jogador.","avs");var ep=R("posJog");if(ep)ep.focus();return}
+  if(!validaValores(CAMPOS_RECEITA,true))return;
   var telVal=V("telJog")||"";
   var resTel=validaCel(telVal);
   aplicaFeedback(resTel);
@@ -455,7 +582,7 @@ function adicionarJogador(){
   var diar=Number(V("diaria"))||0;
   jogadores.push({
     nome:nome,celular:resTel.vazio?"":telVal.trim(),
-    posicao:(V("posJog")||"").trim(),
+    posicao:posicao,
     mensalidade:mens,diaria:diar,receita:mens+diar
   });
   SV("nomeJog","");SV("posJog","");SV("mensalidade","0");SV("diaria","0");
@@ -467,15 +594,17 @@ function adicionarJogador(){
 function salvarJogo(){
   var dataJogo=V("dataJogo"),numJogo=V("numJogo");
   if(!dataJogo){toast("Informe a data do jogo.","err");var e1=R("dataJogo");if(e1)e1.focus();return}
+  if(!validaDataJogo(true)){atualizaBloqueioDataJogo();var ed=R("dataJogo");if(ed)ed.focus();return}
   if(!numJogo||Number(numJogo)<1){toast("Informe o numero do jogo.","err");var e2=R("numJogo");if(e2)e2.focus();return}
+  if(!validaValores(CAMPOS_VALOR,true))return;
   if(jogadores.length===0){toast("Adicione pelo menos um jogador.","err");return}
-  var pj=Number(V("pagtoJuiz"))||0,ac=Number(V("aluguelCampo"))||0;
+  var pj=Number(V("pagtoJuiz"))||0,gol=Number(V("goleiro"))||0,ac=Number(V("aluguelCampo"))||0;
   var mat=Number(V("material"))||0,og=Number(V("outrosGastos"))||0;
-  var totalDesp=pj+ac+mat+og,totalRec=0;
+  var totalDesp=pj+gol+ac+mat+og,totalRec=0;
   for(var i=0;i<jogadores.length;i++)totalRec+=jogadores[i].receita;
   var jogo={
     id:Date.now(),dataJogo:dataJogo,numJogo:Number(numJogo),
-    pagtoJuiz:pj,aluguelCampo:ac,material:mat,outrosGastos:og,
+    pagtoJuiz:pj,goleiro:gol,aluguelCampo:ac,material:mat,outrosGastos:og,
     descOutros:(V("descOutros")||"").trim()||null,
     obs:(V("obsJogo")||"").trim()||null,
     totalDesp:totalDesp,totalRec:totalRec,saldo:totalRec-totalDesp,
@@ -492,108 +621,49 @@ function salvarJogo(){
 
 function limpar(){
   ["dataJogo","numJogo","descOutros","obsJogo","nomeJog","posJog"].forEach(function(id){SV(id,"")});
-  ["pagtoJuiz","aluguelCampo","material","outrosGastos","mensalidade","diaria"].forEach(function(id){SV(id,"0")});
+  ["pagtoJuiz","goleiro","aluguelCampo","material","outrosGastos","mensalidade","diaria"].forEach(function(id){SV(id,"0")});
+  CAMPOS_VALOR.forEach(function(id){aplicaValorOk(id)});
   ST("totalDespesas",moeda(0));ST("prevReceita",moeda(0));
-  resetCelular();jogadores=[];renderJog()
-}
-
-function montarCaixaJogadores(item){
-  var html='<tr class="detrow" data-det="'+esc(item.chave)+'"><td colspan="6"><div class="detbox">';
-  html+='<div class="detttl">Jogadores de '+fData(item.dataJogo)+' - Jogo #'+item.numJogo+'</div>';
-  if(!item.jogadores.length){
-    html+='<div class="detmut">Nenhum jogador encontrado neste agrupamento.</div>';
-  }else{
-    html+='<div class="detgrid">';
-    item.jogadores.forEach(function(j){
-      html+='<div class="detitem">'+
-        '<strong>'+esc(j.nome||'-')+'</strong>'+
-        '<span class="detmut">Celular: '+(j.celular?esc(j.celular):'--')+'</span>'+
-        '<span class="detmut">Posicao: '+(j.posicao?esc(j.posicao):'--')+'</span>'+
-        '<span class="tn tv">Receita: '+moeda(Number(j.receita||0))+'</span>'+
-      '</div>';
-    });
-    html+='</div>';
-  }
-  html+='</div></td></tr>';
-  return html
-}
-
-function alternarJogadoresResumo(chave){
-  var linha=document.querySelector('tr[data-det="'+chave+'"]');
-  if(linha){linha.parentNode.removeChild(linha);return}
-  var btn=document.querySelector('[data-chave="'+chave+'"]');
-  if(!btn)return;
-  var tr=btn.closest('tr');
-  var dados=window.__resumoJogos&&window.__resumoJogos[chave];
-  if(!tr||!dados)return;
-  tr.insertAdjacentHTML('afterend',montarCaixaJogadores(dados))
+  resetCelular();jogadores=[];renderJog();atualizaBloqueioDataJogo()
 }
 
 function carregarResumo(){
   localforage.getItem("lista").then(function(lista){
     var arr=Array.isArray(lista)?lista:[];
-    var agrupados={};
-
-    arr.forEach(function(jogo){
-      var chave=String(jogo.dataJogo)+"_"+String(jogo.numJogo);
-      if(!agrupados[chave]){
-        agrupados[chave]={
-          chave:chave,
-          dataJogo:jogo.dataJogo,
-          numJogo:jogo.numJogo,
-          qtd:0,
-          totalRec:0,
-          totalDesp:0,
-          saldo:0,
-          jogadores:[]
-        }
-      }
-      agrupados[chave].qtd+=1;
-      agrupados[chave].totalRec+=Number(jogo.totalRec||0);
-      agrupados[chave].totalDesp+=Number(jogo.totalDesp||0);
-      agrupados[chave].saldo+=Number(jogo.saldo||0);
-      if(Array.isArray(jogo.jogadores)){
-        jogo.jogadores.forEach(function(j){agrupados[chave].jogadores.push(j)})
-      }
-    });
-
-    window.__resumoJogos=agrupados;
-
-    var resumo=Object.values(agrupados);
-    resumo.sort(function(a,b){
+    arr.sort(function(a,b){
       if(a.dataJogo===b.dataJogo)return b.numJogo-a.numJogo;
       return a.dataJogo<b.dataJogo?1:-1
     });
-
     var tb=R("tbResumo");if(!tb)return;
     tb.innerHTML="";
-
-    if(resumo.length===0){
+    if(arr.length===0){
       tb.innerHTML='<tr class="emptr"><td colspan="6"><span class="emptico">&#x1F4CB;</span>Nenhum jogo salvo ainda</td></tr>';
       return
     }
-
-    resumo.forEach(function(item){
-      var s=Number(item.saldo)||0;
+    arr.forEach(function(jogo){
+      var s=Number(jogo.saldo)||0;
       var sc=s>0?"sp":s<0?"sn":"sz";
+      var nj=Array.isArray(jogo.jogadores)?jogo.jogadores.length:0;
       var tr=document.createElement("tr");
       tr.innerHTML=
-        '<td style="font-weight:700">'+fData(item.dataJogo)+"</td>"+
-        '<td><span class="bdg bv bdg-click" title="Clique para ver os jogadores" data-chave="'+esc(item.chave)+'">Jogo #'+item.numJogo+"</span></td>"+
-        '<td><span class="bdg ba">'+item.qtd+" registro(s)</span></td>"+
-        '<td class="tn tv">'+moeda(Number(item.totalRec))+"</td>"+
-        '<td class="tn trr">'+moeda(Number(item.totalDesp))+"</td>"+
+        '<td style="font-weight:700">'+fData(jogo.dataJogo)+"</td>"+
+        '<td><span class="bdg bv">Jogo #'+jogo.numJogo+"</span></td>"+
+        '<td><span class="bdg ba">'+nj+" jogador(es)</span></td>"+
+        '<td class="tn tv">'+moeda(Number(jogo.totalRec))+"</td>"+
+        '<td class="tn trr">'+moeda(Number(jogo.totalDesp))+"</td>"+
         '<td class="tn '+sc+'">'+moeda(s)+"</td>";
       tb.appendChild(tr)
-    });
-
-    tb.querySelectorAll(".bdg-click").forEach(function(el){
-      el.addEventListener("click",function(){alternarJogadoresResumo(this.getAttribute("data-chave"))})
     })
   }).catch(function(e){console.error("[Racha] resumo:",e);toast("Erro ao carregar jogos.","err")})
 }
 
 document.addEventListener("DOMContentLoaded",function(){
+  var eData=R("dataJogo");
+  if(eData){
+    eData.min=hojeISO();
+    eData.addEventListener("input",atualizaBloqueioDataJogo);
+    eData.addEventListener("change",atualizaBloqueioDataJogo)
+  }
   var elTel=R("telJog");
   if(elTel){
     elTel.addEventListener("input",function(){
@@ -621,13 +691,19 @@ document.addEventListener("DOMContentLoaded",function(){
   if(bSal)bSal.addEventListener("click",function(e){e.preventDefault();salvarJogo()});
   var bLim=R("btnLimpar");
   if(bLim)bLim.addEventListener("click",function(e){e.preventDefault();limpar()});
-  ["pagtoJuiz","aluguelCampo","material","outrosGastos"].forEach(function(id){
-    var e=R(id);if(e)e.addEventListener("input",calcDesp)
+  CAMPOS_DESPESA.forEach(function(id){
+    var e=R(id);if(e){
+      e.addEventListener("input",function(){validaValor(id,false);calcDesp()});
+      e.addEventListener("blur",function(){validaValor(id,true)})
+    }
   });
-  ["mensalidade","diaria"].forEach(function(id){
-    var e=R(id);if(e)e.addEventListener("input",calcPreview)
+  CAMPOS_RECEITA.forEach(function(id){
+    var e=R(id);if(e){
+      e.addEventListener("input",function(){validaValor(id,false);calcPreview()});
+      e.addEventListener("blur",function(){validaValor(id,true)})
+    }
   });
-  calcDesp();renderJog();carregarResumo()
+  calcDesp();renderJog();atualizaBloqueioDataJogo();carregarResumo()
 });
 
 })();
