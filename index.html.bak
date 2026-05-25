@@ -629,87 +629,34 @@ function limpar(){
 
 function carregarResumo(){
   localforage.getItem("lista").then(function(lista){
-
-    var arr = Array.isArray(lista) ? lista : [];
-
-    var agrupados = {};
-
-    arr.forEach(function(jogo){
-
-      var chave = jogo.dataJogo + "_" + jogo.numJogo;
-
-      if(!agrupados[chave]){
-        agrupados[chave] = {
-          dataJogo: jogo.dataJogo,
-          numJogo: jogo.numJogo,
-          qtd: 0,
-          totalRec: 0,
-          totalDesp: 0,
-          saldo: 0
-        };
-      }
-
-      agrupados[chave].qtd += 1;
-      agrupados[chave].totalRec += Number(jogo.totalRec || 0);
-      agrupados[chave].totalDesp += Number(jogo.totalDesp || 0);
-      agrupados[chave].saldo += Number(jogo.saldo || 0);
-
+    var arr=Array.isArray(lista)?lista:[];
+    arr.sort(function(a,b){
+      if(a.dataJogo===b.dataJogo)return b.numJogo-a.numJogo;
+      return a.dataJogo<b.dataJogo?1:-1
     });
-
-    var resumo = Object.values(agrupados);
-
-    resumo.sort(function(a,b){
-      if(a.dataJogo === b.dataJogo){
-        return b.numJogo - a.numJogo;
-      }
-      return a.dataJogo < b.dataJogo ? 1 : -1;
-    });
-
-    var tb = R("tbResumo");
-
-    if(!tb) return;
-
-    tb.innerHTML = "";
-
-    if(resumo.length === 0){
-      tb.innerHTML =
-        '<tr class="emptr">' +
-        '<td colspan="6">' +
-        '<span class="emptico">&#x1F4CB;</span>' +
-        'Nenhum jogo salvo ainda' +
-        '</td>' +
-        '</tr>';
-      return;
+    var tb=R("tbResumo");if(!tb)return;
+    tb.innerHTML="";
+    if(arr.length===0){
+      tb.innerHTML='<tr class="emptr"><td colspan="6"><span class="emptico">&#x1F4CB;</span>Nenhum jogo salvo ainda</td></tr>';
+      return
     }
-
-    resumo.forEach(function(item){
-
-      var s = Number(item.saldo) || 0;
-
-      var sc =
-        s > 0 ? "sp" :
-        s < 0 ? "sn" :
-        "sz";
-
-      var tr = document.createElement("tr");
-
-      tr.innerHTML =
-        '<td style="font-weight:700">' + fData(item.dataJogo) + '</td>' +
-        '<td><span class="bdg bv">Jogo #' + item.numJogo + '</span></td>' +
-        '<td><span class="bdg ba">' + item.qtd + ' registro(s)</span></td>' +
-        '<td class="tn tv">' + moeda(item.totalRec) + '</td>' +
-        '<td class="tn trr">' + moeda(item.totalDesp) + '</td>' +
-        '<td class="tn ' + sc + '">' + moeda(s) + '</td>';
-
-      tb.appendChild(tr);
-
-    });
-
-  }).catch(function(e){
-    console.error("[Racha] resumo:",e);
-    toast("Erro ao carregar jogos.","err");
-  });
+    arr.forEach(function(jogo){
+      var s=Number(jogo.saldo)||0;
+      var sc=s>0?"sp":s<0?"sn":"sz";
+      var nj=Array.isArray(jogo.jogadores)?jogo.jogadores.length:0;
+      var tr=document.createElement("tr");
+      tr.innerHTML=
+        '<td style="font-weight:700">'+fData(jogo.dataJogo)+"</td>"+
+        '<td><span class="bdg bv">Jogo #'+jogo.numJogo+"</span></td>"+
+        '<td><span class="bdg ba">'+nj+" jogador(es)</span></td>"+
+        '<td class="tn tv">'+moeda(Number(jogo.totalRec))+"</td>"+
+        '<td class="tn trr">'+moeda(Number(jogo.totalDesp))+"</td>"+
+        '<td class="tn '+sc+'">'+moeda(s)+"</td>";
+      tb.appendChild(tr)
+    })
+  }).catch(function(e){console.error("[Racha] resumo:",e);toast("Erro ao carregar jogos.","err")})
 }
+
 document.addEventListener("DOMContentLoaded",function(){
   var eData=R("dataJogo");
   if(eData){
