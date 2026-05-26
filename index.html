@@ -77,6 +77,9 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
 .emptr td{text-align:center;padding:26px;color:var(--c5);font-size:.82rem}
 .emptico{font-size:1.8rem;display:block;margin-bottom:5px;opacity:.45}
 .bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.69rem;font-weight:700}
+button.bdg{border:0;font-family:inherit;cursor:pointer}
+button.bdg:focus{outline:2px solid var(--vm);outline-offset:2px}
+.jogo-link:hover{filter:brightness(.96)}
 .bv{background:var(--vs);color:var(--vd)}.ba{background:var(--azc);color:var(--az)}
 .sp{color:var(--az)!important;font-weight:700}
 .sn{color:var(--vr)!important;font-weight:700}
@@ -99,6 +102,10 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
 .rprev{background:var(--vs);border:1px solid #c8e6c9;border-radius:var(--r1);padding:9px 13px;display:flex;align-items:center;justify-content:space-between;min-height:40px}
 .rprev-l{font-size:.74rem;font-weight:700;color:var(--vd)}
 .rprev-v{font-size:.97rem;font-weight:700;color:var(--vd)}
+tr.linha-jogador{cursor:pointer}
+tr.linha-jogador.sel{background:var(--vs)}
+tr.linha-jogador:focus{outline:2px solid var(--vm);outline-offset:-2px}
+.hide{display:none!important}
 .toast-area{position:fixed;bottom:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{display:flex;align-items:center;gap:9px;padding:11px 16px;border-radius:var(--r2);font-size:.82rem;font-weight:600;color:var(--br);box-shadow:var(--s3);max-width:330px;animation:tin .28s ease,tout .35s ease 2.65s forwards}
 .tok{background:var(--vd)}.terr{background:var(--vr)}.tavs{background:#b45309}
@@ -149,8 +156,8 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
           <span id="fbDataJogo" class="fbcel nth">&#160;</span>
         </div>
         <div class="fg">
-          <label class="lbl" for="numJogo">Numero do Jogo <span class="req">*</span></label>
-          <input type="number" id="numJogo" class="fc" placeholder="Ex: 1" min="1"/>
+          <label class="lbl" for="horaJogo">Horario do Jogo <span class="req">*</span></label>
+          <input type="text" id="horaJogo" class="fc" placeholder="HH:MM" maxlength="5" inputmode="numeric" autocomplete="off" required/>
         </div>
       </div>
       <div class="dsep"><span>Despesas do Jogo</span><hr/></div>
@@ -277,7 +284,7 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
     <button type="button" id="btnLimpar" class="btn bsec">&#x1F5D1; Limpar Formulario</button>
   </div>
 
-  <section class="card" style="margin-top:28px">
+  <section class="card" id="secResumo" style="margin-top:28px">
     <div class="chdr">
       <div class="cico iy">&#x1F4CA;</div>
       <div><div class="ctit">Resumo dos Jogos</div><div class="csub">Historico financeiro de todas as partidas salvas</div></div>
@@ -287,7 +294,7 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
         <table>
           <thead>
             <tr>
-              <th>Data</th><th>N. Jogo</th><th>Jogadores</th>
+              <th>Data</th><th>Horario</th><th>Jogadores</th>
               <th>Total Receitas (R$)</th><th>Total Despesas (R$)</th><th>Saldo (R$)</th>
             </tr>
           </thead>
@@ -295,6 +302,173 @@ tbody td{padding:10px 13px;color:var(--c7);vertical-align:middle}
             <tr class="emptr"><td colspan="6"><span class="emptico">&#x1F4CB;</span>Nenhum jogo salvo ainda</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card hide" id="secDetalheJogo" style="margin-top:28px">
+    <div class="chdr">
+      <div class="cico iy">&#x1F4DD;</div>
+      <div><div class="ctit" id="detJogoTitulo">Detalhe do Jogo</div><div class="csub" id="detJogoSub">Jogadores da partida</div></div>
+    </div>
+    <div class="cbody">
+      <div class="bar" style="margin-top:0;padding-top:0;border-top:none">
+        <button type="button" id="btnVoltarResumo" class="btn bsec">&#x2190; Retornar para Resumo dos jogos</button>
+      </div>
+      <div id="detStatusEdicao" class="fbcel nth" style="margin-top:10px">&#160;</div>
+
+      <div class="jform" id="detDespesasBox" style="margin-top:16px">
+        <div class="jtit">Despesas do Jogo</div>
+        <div class="g g5">
+          <div class="fg">
+            <label class="lbl" for="detPagtoJuiz">Pagamento do Juiz</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detPagtoJuiz" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detGoleiro">Pagamento do Goleiro</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detGoleiro" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detAluguelCampo">Aluguel do Campo</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detAluguelCampo" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detMaterial">Material</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detMaterial" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detOutrosGastos">Outros Gastos</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detOutrosGastos" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+        </div>
+        <div class="g g3" style="margin-top:12px">
+          <div class="fg">
+            <label class="lbl" for="detDescOutros">Descricao dos Outros Gastos</label>
+            <textarea id="detDescOutros" class="fc" disabled></textarea>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detObsJogo">Observacoes</label>
+            <textarea id="detObsJogo" class="fc" disabled></textarea>
+          </div>
+          <div class="fg">
+            <label class="lbl">Total de Despesas</label>
+            <div class="rprev">
+              <span class="rprev-l">Total</span>
+              <span class="rprev-v" id="detTotalDespesas">R$&#160;0,00</span>
+            </div>
+          </div>
+        </div>
+        <div class="bar">
+          <button type="button" id="btnSalvarDespesasDetalhe" class="btn bpri" disabled>&#x1F4BE; Salvar despesas</button>
+        </div>
+      </div>
+
+      <div class="jform" id="detNovoJogadorBox">
+        <div class="jtit">Novo Jogador</div>
+        <div class="g g3">
+          <div class="fg">
+            <label class="lbl" for="detNovoNomeJog">Nome <span class="req">*</span></label>
+            <input type="text" id="detNovoNomeJog" class="fc" placeholder="Nome do jogador" disabled/>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detNovoTelJog">Celular <span class="opt">(opcional)</span></label>
+            <input type="tel" id="detNovoTelJog" class="fc" placeholder="(00) 90000-0000" maxlength="15" inputmode="numeric" autocomplete="off" disabled/>
+            <span id="detNovoFbTel" class="fbcel nth">&#160;</span>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detNovoPosJog">Posicao <span class="req">*</span></label>
+            <select id="detNovoPosJog" class="fc" required disabled>
+              <option value="">Selecione</option>
+              <option value="LATERAL ESQUERDO">LATERAL ESQUERDO</option>
+              <option value="LATERAL DIREITO">LATERAL DIREITO</option>
+              <option value="ZAGUEIRO">ZAGUEIRO</option>
+              <option value="VOLANTE">VOLANTE</option>
+              <option value="MEIA">MEIA</option>
+              <option value="ATACANTE">ATACANTE</option>
+            </select>
+          </div>
+        </div>
+        <div class="g g3" style="margin-top:12px">
+          <div class="fg">
+            <label class="lbl" for="detNovoMensalidade">Mensalidade</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detNovoMensalidade" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detNovoDiaria">Diaria</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detNovoDiaria" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl">Receita Total do Jogador</label>
+            <div class="rprev">
+              <span class="rprev-l">Total</span>
+              <span class="rprev-v" id="detNovoPrevReceita">R$&#160;0,00</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px">
+          <button type="button" id="btnAddJogadorDetalhe" class="btn bout" disabled>+ Adicionar Jogador</button>
+        </div>
+      </div>
+
+      <div class="tblw">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Nome</th><th>Celular</th><th>Posicao</th>
+              <th>Mensalidade (R$)</th><th>Diaria (R$)</th><th>Receita Total (R$)</th>
+            </tr>
+          </thead>
+          <tbody id="tbDetalheJog">
+            <tr class="emptr"><td colspan="7"><span class="emptico">&#x1F464;</span>Nenhum jogador nesta partida</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="jform" style="margin-top:16px;margin-bottom:0">
+        <div class="jtit" id="detJogTitulo">Jogador selecionado</div>
+        <div class="g g3">
+          <div class="fg">
+            <label class="lbl" for="detNomeJog">Nome <span class="req">*</span></label>
+            <input type="text" id="detNomeJog" class="fc" disabled/>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detTelJog">Celular <span class="opt">(opcional)</span></label>
+            <input type="tel" id="detTelJog" class="fc" maxlength="15" inputmode="numeric" autocomplete="off" disabled/>
+            <span id="detFbTel" class="fbcel nth">&#160;</span>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detPosJog">Posicao <span class="req">*</span></label>
+            <select id="detPosJog" class="fc" required disabled>
+              <option value="">Selecione</option>
+              <option value="LATERAL ESQUERDO">LATERAL ESQUERDO</option>
+              <option value="LATERAL DIREITO">LATERAL DIREITO</option>
+              <option value="ZAGUEIRO">ZAGUEIRO</option>
+              <option value="VOLANTE">VOLANTE</option>
+              <option value="MEIA">MEIA</option>
+              <option value="ATACANTE">ATACANTE</option>
+            </select>
+          </div>
+        </div>
+        <div class="g g3" style="margin-top:12px">
+          <div class="fg">
+            <label class="lbl" for="detMensalidade">Mensalidade</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detMensalidade" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl" for="detDiaria">Diaria</label>
+            <div class="iw"><span class="ipre">R$</span><input type="number" id="detDiaria" class="fc" step="0.01" value="0" min="0" disabled/></div>
+          </div>
+          <div class="fg">
+            <label class="lbl">Receita Total do Jogador</label>
+            <div class="rprev">
+              <span class="rprev-l">Total</span>
+              <span class="rprev-v" id="detPrevReceita">R$&#160;0,00</span>
+            </div>
+          </div>
+        </div>
+        <div class="bar">
+          <button type="button" id="btnSalvarJogadorDetalhe" class="btn bpri" disabled>&#x1F4BE; Salvar jogador</button>
+        </div>
       </div>
     </div>
   </section>
@@ -324,6 +498,13 @@ var jogadores=[];
 var CAMPOS_DESPESA=["pagtoJuiz","goleiro","aluguelCampo","material","outrosGastos"];
 var CAMPOS_RECEITA=["mensalidade","diaria"];
 var CAMPOS_VALOR=CAMPOS_DESPESA.concat(CAMPOS_RECEITA);
+var CAMPOS_DETALHE=["detNomeJog","detTelJog","detPosJog","detMensalidade","detDiaria"];
+var CAMPOS_DET_RECEITA=["detMensalidade","detDiaria"];
+var CAMPOS_DET_DESPESA=["detPagtoJuiz","detGoleiro","detAluguelCampo","detMaterial","detOutrosGastos"];
+var CAMPOS_DET_NOVO=["detNovoNomeJog","detNovoTelJog","detNovoPosJog","detNovoMensalidade","detNovoDiaria"];
+var CAMPOS_DET_NOVO_RECEITA=["detNovoMensalidade","detNovoDiaria"];
+var POSICOES=["LATERAL ESQUERDO","LATERAL DIREITO","ZAGUEIRO","VOLANTE","MEIA","ATACANTE"];
+var detalhe={jogoIndex:null,jogo:null,jogadorIndex:null,jogadorOriginal:null,despesasOriginal:null,editavel:false};
 
 function R(id){return document.getElementById(id)}
 function V(id){var e=R(id);return e?e.value:""}
@@ -331,71 +512,93 @@ function SV(id,v){var e=R(id);if(e)e.value=v}
 function ST(id,t){var e=R(id);if(e)e.textContent=t}
 
 function moeda(valor){
-  return "R\u00A0"+Number(valor||0).toLocaleString("pt-BR",{
-    minimumFractionDigits:2,maximumFractionDigits:2
-  })
+  return "R\u00A0"+Number(valor||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})
 }
 
 function fData(d){
   if(!d)return "-";
   var p=d.split("-");
-  return p[2]+"/"+p[1]+"/"+p[0]
+  return p.length===3?p[2]+"/"+p[1]+"/"+p[0]:d
 }
 
 function hojeISO(){
   var d=new Date();
-  var m=String(d.getMonth()+1).padStart(2,"0");
-  var dia=String(d.getDate()).padStart(2,"0");
-  return d.getFullYear()+"-"+m+"-"+dia
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")
 }
 
-function dataJogoPassada(){
-  var data=V("dataJogo");
-  return !!data&&data<hojeISO()
+function agoraHM(){
+  var d=new Date();
+  return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")
 }
 
-function validaDataJogo(avisar){
-  var el=R("dataJogo"),fb=R("fbDataJogo");
-  if(!el)return true;
-  if(!el.value){
-    el.classList.remove("ferr");
-    el.setCustomValidity("");
-    if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
-    return true
-  }
-  if(dataJogoPassada()){
-    var msg="Data do jogo nao pode ser anterior a hoje.";
-    el.classList.add("ferr");
-    el.setCustomValidity(msg);
-    if(fb){fb.className="fbcel err";fb.textContent=msg}
-    if(avisar)toast(msg,"err");
-    return false
-  }
-  el.classList.remove("ferr");
-  el.setCustomValidity("");
-  if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
-  return true
+function horaValida(v){
+  return /^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(String(v||"").trim())
 }
 
-function atualizaBloqueioDataJogo(){
-  var bloquear=dataJogoPassada();
-  var ids=["numJogo","pagtoJuiz","goleiro","aluguelCampo","material",
-    "outrosGastos","descOutros","obsJogo","nomeJog","telJog","posJog",
-    "mensalidade","diaria","btnAdd","btnSalvar"];
-  validaDataJogo(false);
-  ids.forEach(function(id){
-    var el=R(id);
-    if(el)el.disabled=bloquear
-  });
-  document.querySelectorAll(".bdel").forEach(function(btn){btn.disabled=bloquear})
+function mascaraHora(v){
+  var d=String(v||"").replace(/[^0-9]/g,"").slice(0,4);
+  if(d.length<=2)return d;
+  return d.slice(0,2)+":"+d.slice(2)
+}
+
+function posicaoValida(v){
+  return POSICOES.indexOf(String(v||"").trim())!==-1
+}
+
+function chaveJogo(jogo){
+  if(!jogo)return "";
+  if(jogo.chaveJogo)return String(jogo.chaveJogo);
+  if(jogo.dataJogo&&horaValida(jogo.horaJogo))return jogo.dataJogo+"|"+jogo.horaJogo;
+  if(jogo.dataJogo&&jogo.numJogo)return "LEGADO|"+jogo.dataJogo+"|"+jogo.numJogo;
+  return "LEGADO|"+(jogo.id||"")
+}
+
+function rotuloJogo(jogo){
+  if(jogo&&horaValida(jogo.horaJogo))return jogo.horaJogo;
+  return "Jogo #"+(jogo&&jogo.numJogo?jogo.numJogo:"-")
+}
+
+function tituloJogo(jogo){
+  if(jogo&&horaValida(jogo.horaJogo))return "Jogo "+jogo.horaJogo;
+  return "Jogo #"+(jogo&&jogo.numJogo?jogo.numJogo:"-")
+}
+
+function subtituloJogo(jogo){
+  if(!jogo)return "Jogadores da partida";
+  var sub="Partida de "+fData(jogo.dataJogo);
+  if(horaValida(jogo.horaJogo))sub+=" as "+jogo.horaJogo;
+  return sub
+}
+
+function inicioJogoMs(jogo){
+  if(!jogo||!jogo.dataJogo||!horaValida(jogo.horaJogo))return 0;
+  var d=jogo.dataJogo.split("-"),h=jogo.horaJogo.split(":");
+  var dt=new Date(Number(d[0]),Number(d[1])-1,Number(d[2]),Number(h[0]),Number(h[1]),0,0);
+  var ms=dt.getTime();
+  return isNaN(ms)?0:ms
+}
+
+function limiteEdicaoMs(jogo){
+  var ini=inicioJogoMs(jogo);
+  if(ini)return ini+90*60000;
+  var criado=Date.parse(jogo&&jogo.criadoEm?jogo.criadoEm:"");
+  return isNaN(criado)?0:criado+90*60000
+}
+
+function edicaoLiberada(jogo){
+  var limite=limiteEdicaoMs(jogo);
+  return !!limite&&Date.now()<=limite
+}
+
+function fDataHoraMs(ms){
+  if(!ms)return "-";
+  var d=new Date(ms);
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear()
+    +" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")
 }
 
 function esc(s){
-  return String(s||"")
-    .replace(/&/g,"&")
-    .replace(/</g,"<")
-    .replace(/>/g,">")
-    .replace(/"/g,"&quot;")
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")
 }
 
 function toast(msg,tipo){
@@ -410,22 +613,17 @@ function toast(msg,tipo){
 }
 
 function mascara(v){
-  var d=v.replace(/[^0-9]/g,"").slice(0,11);
+  var d=String(v||"").replace(/[^0-9]/g,"").slice(0,11);
   if(!d)return "";
   if(d.length<=2)return "("+d;
   if(d.length<=7)return "("+d.slice(0,2)+") "+d.slice(2);
   return "("+d.slice(0,2)+") "+d.slice(2,7)+"-"+d.slice(7,11)
 }
 
-var DDDS=[11,12,13,14,15,16,17,18,19,
-  21,22,24,27,28,31,32,33,34,35,37,38,
-  41,42,43,44,45,46,47,48,49,51,53,54,55,
-  61,62,63,64,65,66,67,68,69,
-  71,73,74,75,77,79,81,82,83,84,85,86,87,88,89,
-  91,92,93,94,95,96,97,98,99];
+var DDDS=[11,12,13,14,15,16,17,18,19,21,22,24,27,28,31,32,33,34,35,37,38,41,42,43,44,45,46,47,48,49,51,53,54,55,61,62,63,64,65,66,67,68,69,71,73,74,75,77,79,81,82,83,84,85,86,87,88,89,91,92,93,94,95,96,97,98,99];
 
 function validaCel(v){
-  var d=v.replace(/[^0-9]/g,"");
+  var d=String(v||"").replace(/[^0-9]/g,"");
   if(d.length===0)return{ok:true,vazio:true,msg:""};
   if(d.length<11)return{ok:false,vazio:false,msg:"Numero incompleto. Use (DDD) 9XXXX-XXXX"};
   if(d.length>11)return{ok:false,vazio:false,msg:"Numero com muitos digitos"};
@@ -435,8 +633,8 @@ function validaCel(v){
   return{ok:true,vazio:false,msg:"Celular valido"}
 }
 
-function aplicaFeedback(res){
-  var el=R("telJog"),fb=R("fbTel");
+function aplicaFeedbackCelular(elId,fbId,res){
+  var el=R(elId),fb=R(fbId);
   if(!el||!fb)return;
   el.classList.remove("ferr","fok");
   fb.className="fbcel";
@@ -445,20 +643,96 @@ function aplicaFeedback(res){
   else{el.classList.add("fok");fb.classList.add("ok");fb.textContent="OK: "+res.msg}
 }
 
+function aplicaFeedback(res){aplicaFeedbackCelular("telJog","fbTel",res)}
+function aplicaFeedbackDetalhe(res){aplicaFeedbackCelular("detTelJog","detFbTel",res)}
+
 function resetCelular(){
   var el=R("telJog"),fb=R("fbTel");
   if(el){el.value="";el.classList.remove("ferr","fok")}
   if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
 }
 
-function calcDesp(){
-  var t=(Number(V("pagtoJuiz"))||0)+(Number(V("goleiro"))||0)+(Number(V("aluguelCampo"))||0)
-       +(Number(V("material"))||0)+(Number(V("outrosGastos"))||0);
-  ST("totalDespesas",moeda(t));return t
+function resetCelularDetalheNovo(){
+  var el=R("detNovoTelJog"),fb=R("detNovoFbTel");
+  if(el){el.value="";el.classList.remove("ferr","fok")}
+  if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
 }
 
-function calcPreview(){
-  ST("prevReceita",moeda((Number(V("mensalidade"))||0)+(Number(V("diaria"))||0)))
+function dataJogoPassada(){var data=V("dataJogo");return !!data&&data<hojeISO()}
+
+function validaDataJogo(avisar){
+  var el=R("dataJogo"),fb=R("fbDataJogo");
+  if(!el)return true;
+  el.min=hojeISO();
+  if(!el.value){
+    el.classList.remove("ferr");el.setCustomValidity("");
+    if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
+    return true
+  }
+  if(dataJogoPassada()){
+    var msg="Data do jogo nao pode ser anterior a hoje.";
+    el.classList.add("ferr");el.setCustomValidity(msg);
+    if(fb){fb.className="fbcel err";fb.textContent=msg}
+    if(avisar)toast(msg,"err");
+    return false
+  }
+  el.classList.remove("ferr");el.setCustomValidity("");
+  if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
+  return true
+}
+
+function validaHoraJogo(avisar){
+  var el=R("horaJogo");
+  if(!el)return true;
+  if(!String(el.value||"").trim()){
+    var msg="Informe o horario do jogo.";
+    el.classList.add("ferr");el.setCustomValidity(msg);
+    if(avisar)toast(msg,"err");
+    return false
+  }
+  el.value=mascaraHora(el.value);
+  if(!horaValida(el.value)){
+    var msg2="Horario invalido. Use o formato HH:MM.";
+    el.classList.add("ferr");el.setCustomValidity(msg2);
+    if(avisar)toast(msg2,"err");
+    return false
+  }
+  if(V("dataJogo")===hojeISO()&&el.value<agoraHM()){
+    var msg3="Horario do jogo nao pode ser menor que a hora atual.";
+    el.classList.add("ferr");el.setCustomValidity(msg3);
+    if(avisar)toast(msg3,"err");
+    return false
+  }
+  el.classList.remove("ferr");el.setCustomValidity("");
+  return true
+}
+
+function atualizaBloqueioDataJogo(){
+  var bloquear=dataJogoPassada();
+  var ids=["horaJogo","pagtoJuiz","goleiro","aluguelCampo","material","outrosGastos","descOutros","obsJogo","nomeJog","telJog","posJog","mensalidade","diaria","btnAdd","btnSalvar"];
+  validaDataJogo(false);
+  ids.forEach(function(id){var el=R(id);if(el)el.disabled=bloquear});
+  document.querySelectorAll(".bdel").forEach(function(btn){btn.disabled=bloquear})
+}
+
+function atualizaHoraJogo(){
+  var el=R("horaJogo");
+  if(!el)return;
+  if(el.value)validaHoraJogo(false);
+  else{el.classList.remove("ferr");el.setCustomValidity("")}
+}
+
+function validaPosicao(id,avisar){
+  var el=R(id);
+  if(!el)return true;
+  if(!posicaoValida(el.value)){
+    var msg="Selecione a posicao do jogador.";
+    el.classList.add("ferr");el.setCustomValidity(msg);
+    if(avisar)toast(msg,"err");
+    return false
+  }
+  el.classList.remove("ferr");el.setCustomValidity("");
+  return true
 }
 
 function labelCampo(id){
@@ -467,46 +741,29 @@ function labelCampo(id){
 }
 
 function fbValor(id){
-  var el=R(id);
-  if(!el)return null;
-  var fg=el.closest(".fg");
-  if(!fg)return null;
+  var el=R(id);if(!el)return null;
+  var fg=el.closest(".fg");if(!fg)return null;
   var fb=R("fb_"+id);
   if(!fb){
-    fb=document.createElement("span");
-    fb.id="fb_"+id;
-    fb.className="fbcel nth";
-    fb.innerHTML="&#160;";
-    fg.appendChild(fb)
+    fb=document.createElement("span");fb.id="fb_"+id;fb.className="fbcel nth";fb.innerHTML="&#160;";fg.appendChild(fb)
   }
   return fb
 }
 
 function aplicaValorOk(id){
   var el=R(id),fb=fbValor(id);
-  if(el){
-    el.classList.remove("ferr");
-    el.setCustomValidity("")
-  }
-  if(fb){
-    fb.className="fbcel nth";
-    fb.innerHTML="&#160;"
-  }
+  if(el){el.classList.remove("ferr");el.setCustomValidity("")}
+  if(fb){fb.className="fbcel nth";fb.innerHTML="&#160;"}
 }
 
 function validaValor(id,avisar){
-  var el=R(id);
-  if(!el)return true;
+  var el=R(id);if(!el)return true;
   var n=Number(el.value);
   if(el.value!==""&&!isNaN(n)&&n<0){
     var msg=labelCampo(id)+" incorreto. Informe um valor igual ou maior que zero.";
     var fb=fbValor(id);
-    el.classList.add("ferr");
-    el.setCustomValidity(msg);
-    if(fb){
-      fb.className="fbcel err";
-      fb.textContent=msg
-    }
+    el.classList.add("ferr");el.setCustomValidity(msg);
+    if(fb){fb.className="fbcel err";fb.textContent=msg}
     if(avisar)toast(msg,"err");
     return false
   }
@@ -516,18 +773,20 @@ function validaValor(id,avisar){
 
 function validaValores(ids,avisar){
   for(var i=0;i<ids.length;i++){
-    if(!validaValor(ids[i],avisar)){
-      var el=R(ids[i]);
-      if(el)el.focus();
-      return false
-    }
+    if(!validaValor(ids[i],avisar)){var el=R(ids[i]);if(el)el.focus();return false}
   }
   return true
 }
 
+function calcDesp(){
+  var t=(Number(V("pagtoJuiz"))||0)+(Number(V("goleiro"))||0)+(Number(V("aluguelCampo"))||0)+(Number(V("material"))||0)+(Number(V("outrosGastos"))||0);
+  ST("totalDespesas",moeda(t));return t
+}
+
+function calcPreview(){ST("prevReceita",moeda((Number(V("mensalidade"))||0)+(Number(V("diaria"))||0)))}
+
 function calcReceitas(){
-  var t=0;
-  for(var i=0;i<jogadores.length;i++)t+=jogadores[i].receita;
+  var t=0;for(var i=0;i<jogadores.length;i++)t+=Number(jogadores[i].receita)||0;
   ST("totalReceitas",moeda(t));return t
 }
 
@@ -540,26 +799,20 @@ function renderJog(){
   }
   for(var i=0;i<jogadores.length;i++){
     (function(idx){
-      var j=jogadores[idx];
-      var tr=document.createElement("tr");
-      var pos=j.posicao?('<span class="bdg ba">'+esc(j.posicao)+"</span>"):"&mdash;";
-      tr.innerHTML=
-        '<td style="color:var(--c5);font-weight:700">'+(idx+1)+"</td>"+
+      var j=jogadores[idx],tr=document.createElement("tr");
+      tr.innerHTML='<td style="color:var(--c5);font-weight:700">'+(idx+1)+"</td>"+
         '<td style="font-weight:700">'+esc(j.nome)+"</td>"+
         "<td>"+(j.celular?esc(j.celular):"&mdash;")+"</td>"+
-        "<td>"+pos+"</td>"+
+        "<td>"+(j.posicao?('<span class="bdg ba">'+esc(j.posicao)+"</span>"):"&mdash;")+"</td>"+
         '<td class="tn">'+moeda(j.mensalidade)+"</td>"+
         '<td class="tn">'+moeda(j.diaria)+"</td>"+
-        '<td class="tn tv">'+moeda(j.receita)+"</td>"+
-        "<td></td>";
+        '<td class="tn tv">'+moeda(j.receita)+"</td><td></td>";
       var btn=document.createElement("button");
-      btn.type="button";btn.className="btn bdel";btn.textContent="Remover";
-      btn.disabled=dataJogoPassada();
+      btn.type="button";btn.className="btn bdel";btn.textContent="Remover";btn.disabled=dataJogoPassada();
       btn.addEventListener("click",function(){
         if(!validaDataJogo(true)){atualizaBloqueioDataJogo();return}
         var nome=jogadores[idx].nome;
-        jogadores.splice(idx,1);renderJog();
-        toast('"'+nome+'" removido.','avs')
+        jogadores.splice(idx,1);renderJog();toast('"'+nome+'" removido.','avs')
       });
       tr.lastElementChild.appendChild(btn);tb.appendChild(tr)
     })(i)
@@ -567,196 +820,407 @@ function renderJog(){
   calcReceitas()
 }
 
+function jogadorEditavel(j){
+  j=j||{};
+  return{nome:String(j.nome||"").trim(),celular:String(j.celular||"").trim(),posicao:String(j.posicao||"").trim(),mensalidade:Number(j.mensalidade)||0,diaria:Number(j.diaria)||0}
+}
+
+function dadosFormDetalhe(){
+  return{nome:(V("detNomeJog")||"").trim(),celular:(V("detTelJog")||"").trim(),posicao:(V("detPosJog")||"").trim(),mensalidade:Number(V("detMensalidade"))||0,diaria:Number(V("detDiaria"))||0}
+}
+
+function mesmoJogador(a,b){
+  if(!a||!b)return false;
+  return a.nome===b.nome&&a.celular===b.celular&&a.posicao===b.posicao&&a.mensalidade===b.mensalidade&&a.diaria===b.diaria
+}
+
+function calcPreviewDetalhe(){ST("detPrevReceita",moeda((Number(V("detMensalidade"))||0)+(Number(V("detDiaria"))||0)))}
+function calcPreviewNovoDetalhe(){ST("detNovoPrevReceita",moeda((Number(V("detNovoMensalidade"))||0)+(Number(V("detNovoDiaria"))||0)))}
+
+function calcDespDetalhe(){
+  var t=(Number(V("detPagtoJuiz"))||0)+(Number(V("detGoleiro"))||0)+(Number(V("detAluguelCampo"))||0)+(Number(V("detMaterial"))||0)+(Number(V("detOutrosGastos"))||0);
+  ST("detTotalDespesas",moeda(t));return t
+}
+
+function despesasEditaveis(jogo){
+  jogo=jogo||{};
+  return{pagtoJuiz:Number(jogo.pagtoJuiz)||0,goleiro:Number(jogo.goleiro)||0,aluguelCampo:Number(jogo.aluguelCampo)||0,material:Number(jogo.material)||0,outrosGastos:Number(jogo.outrosGastos)||0,descOutros:String(jogo.descOutros||"").trim(),obs:String(jogo.obs||"").trim()}
+}
+
+function dadosDespesasDetalhe(){
+  return{pagtoJuiz:Number(V("detPagtoJuiz"))||0,goleiro:Number(V("detGoleiro"))||0,aluguelCampo:Number(V("detAluguelCampo"))||0,material:Number(V("detMaterial"))||0,outrosGastos:Number(V("detOutrosGastos"))||0,descOutros:(V("detDescOutros")||"").trim(),obs:(V("detObsJogo")||"").trim()}
+}
+
+function mesmasDespesas(a,b){
+  if(!a||!b)return false;
+  return a.pagtoJuiz===b.pagtoJuiz&&a.goleiro===b.goleiro&&a.aluguelCampo===b.aluguelCampo&&a.material===b.material&&a.outrosGastos===b.outrosGastos&&a.descOutros===b.descOutros&&a.obs===b.obs
+}
+
+function setCamposDetalhe(ativo){
+  CAMPOS_DETALHE.forEach(function(id){var el=R(id);if(el)el.disabled=!ativo});
+  if(!ativo){var btn=R("btnSalvarJogadorDetalhe");if(btn)btn.disabled=true}
+}
+
+function setDespesasDetalhe(ativo){
+  CAMPOS_DET_DESPESA.concat(["detDescOutros","detObsJogo"]).forEach(function(id){var el=R(id);if(el)el.disabled=!ativo});
+  var btn=R("btnSalvarDespesasDetalhe");if(btn)btn.disabled=true
+}
+
+function setNovoJogadorDetalhe(ativo){
+  CAMPOS_DET_NOVO.forEach(function(id){var el=R(id);if(el)el.disabled=!ativo});
+  var btn=R("btnAddJogadorDetalhe");if(btn)btn.disabled=!ativo
+}
+
+function atualizarSalvarDetalhe(){
+  var btn=R("btnSalvarJogadorDetalhe");if(!btn)return;
+  if(!detalhe.editavel||detalhe.jogadorIndex===null||!detalhe.jogadorOriginal){btn.disabled=true;return}
+  btn.disabled=mesmoJogador(dadosFormDetalhe(),detalhe.jogadorOriginal)||!posicaoValida(V("detPosJog"))
+}
+
+function atualizarSalvarDespesasDetalhe(){
+  var btn=R("btnSalvarDespesasDetalhe");if(!btn)return;
+  if(!detalhe.editavel||!detalhe.despesasOriginal){btn.disabled=true;return}
+  btn.disabled=mesmasDespesas(dadosDespesasDetalhe(),detalhe.despesasOriginal)
+}
+
+function carregarDespesasDetalhe(jogo){
+  var d=despesasEditaveis(jogo);
+  detalhe.despesasOriginal=d;
+  SV("detPagtoJuiz",d.pagtoJuiz);SV("detGoleiro",d.goleiro);SV("detAluguelCampo",d.aluguelCampo);SV("detMaterial",d.material);SV("detOutrosGastos",d.outrosGastos);
+  SV("detDescOutros",d.descOutros);SV("detObsJogo",d.obs);
+  CAMPOS_DET_DESPESA.forEach(function(id){aplicaValorOk(id)});
+  calcDespDetalhe();atualizarSalvarDespesasDetalhe()
+}
+
+function aplicarPermissaoDetalhe(){
+  detalhe.editavel=edicaoLiberada(detalhe.jogo);
+  var status=R("detStatusEdicao"),limite=limiteEdicaoMs(detalhe.jogo);
+  if(status){
+    status.className="fbcel "+(detalhe.editavel?"ok":"err");
+    status.textContent=limite?(detalhe.editavel?"Edicao liberada ate ":"Edicao encerrada em ")+fDataHoraMs(limite):"Edicao indisponivel para este jogo"
+  }
+  setDespesasDetalhe(detalhe.editavel);
+  setNovoJogadorDetalhe(detalhe.editavel);
+  if(detalhe.jogadorIndex!==null)setCamposDetalhe(detalhe.editavel);else setCamposDetalhe(false);
+  atualizarSalvarDetalhe();atualizarSalvarDespesasDetalhe()
+}
+
+function limparJogadorDetalhe(){
+  detalhe.jogadorIndex=null;detalhe.jogadorOriginal=null;
+  ST("detJogTitulo","Jogador selecionado");
+  SV("detNomeJog","");SV("detTelJog","");SV("detPosJog","");SV("detMensalidade","0");SV("detDiaria","0");
+  ST("detPrevReceita",moeda(0));aplicaFeedbackDetalhe({ok:true,vazio:true,msg:""});aplicaValorOk("detPosJog");
+  CAMPOS_DET_RECEITA.forEach(function(id){aplicaValorOk(id)});
+  setCamposDetalhe(false)
+}
+
+function limparNovoJogadorDetalhe(){
+  SV("detNovoNomeJog","");SV("detNovoTelJog","");SV("detNovoPosJog","");SV("detNovoMensalidade","0");SV("detNovoDiaria","0");
+  ST("detNovoPrevReceita",moeda(0));aplicaValorOk("detNovoPosJog");
+  CAMPOS_DET_NOVO_RECEITA.forEach(function(id){aplicaValorOk(id)});
+  resetCelularDetalheNovo()
+}
+
+function renderDetalheJogadores(jogo){
+  var tb=R("tbDetalheJog");if(!tb)return;
+  tb.innerHTML="";
+  var lista=jogo&&Array.isArray(jogo.jogadores)?jogo.jogadores:[];
+  if(lista.length===0){
+    tb.innerHTML='<tr class="emptr"><td colspan="7"><span class="emptico">&#x1F464;</span>Nenhum jogador nesta partida</td></tr>';return
+  }
+  lista.forEach(function(j,idx){
+    var tr=document.createElement("tr");
+    tr.className="linha-jogador"+(idx===detalhe.jogadorIndex?" sel":"");
+    tr.tabIndex=0;tr.setAttribute("role","button");
+    tr.innerHTML='<td style="color:var(--c5);font-weight:700">'+(idx+1)+"</td>"+
+      '<td style="font-weight:700">'+esc(j.nome)+"</td>"+
+      "<td>"+(j.celular?esc(j.celular):"&mdash;")+"</td>"+
+      "<td>"+(j.posicao?('<span class="bdg ba">'+esc(j.posicao)+"</span>"):"&mdash;")+"</td>"+
+      '<td class="tn">'+moeda(j.mensalidade)+"</td>"+
+      '<td class="tn">'+moeda(j.diaria)+"</td>"+
+      '<td class="tn tv">'+moeda(j.receita)+"</td>";
+    tr.addEventListener("click",function(){selecionarJogadorDetalhe(idx)});
+    tr.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();selecionarJogadorDetalhe(idx)}});
+    tb.appendChild(tr)
+  })
+}
+
+function selecionarJogadorDetalhe(idx){
+  if(!detalhe.jogo||!Array.isArray(detalhe.jogo.jogadores))return;
+  var j=detalhe.jogo.jogadores[idx];if(!j)return;
+  detalhe.jogadorIndex=idx;detalhe.jogadorOriginal=jogadorEditavel(j);
+  ST("detJogTitulo",j.nome?("Editar "+j.nome):"Editar jogador");
+  SV("detNomeJog",detalhe.jogadorOriginal.nome);SV("detTelJog",detalhe.jogadorOriginal.celular);SV("detPosJog",detalhe.jogadorOriginal.posicao);
+  SV("detMensalidade",detalhe.jogadorOriginal.mensalidade);SV("detDiaria",detalhe.jogadorOriginal.diaria);
+  detalhe.jogadorOriginal=dadosFormDetalhe();
+  calcPreviewDetalhe();aplicaFeedbackDetalhe(validaCel(V("detTelJog")));validaPosicao("detPosJog",false);
+  CAMPOS_DET_RECEITA.forEach(function(id){aplicaValorOk(id)});
+  setCamposDetalhe(detalhe.editavel);renderDetalheJogadores(detalhe.jogo);atualizarSalvarDetalhe();
+  var nome=R("detNomeJog");if(nome&&detalhe.editavel)nome.focus()
+}
+
+function mostrarDetalhe(ativo){
+  var secResumo=R("secResumo"),secDetalhe=R("secDetalheJogo");
+  if(secResumo)secResumo.classList.toggle("hide",ativo);
+  if(secDetalhe)secDetalhe.classList.toggle("hide",!ativo)
+}
+
+function abrirDetalheJogo(idx){
+  localforage.getItem("lista").then(function(lista){
+    var arr=Array.isArray(lista)?lista:[],jogo=arr[idx];
+    if(!jogo){toast("Jogo nao encontrado.","err");carregarResumo();return}
+    detalhe.jogoIndex=idx;detalhe.jogo=JSON.parse(JSON.stringify(jogo));
+    ST("detJogoTitulo",tituloJogo(jogo));ST("detJogoSub",subtituloJogo(jogo));
+    limparJogadorDetalhe();limparNovoJogadorDetalhe();carregarDespesasDetalhe(detalhe.jogo);aplicarPermissaoDetalhe();renderDetalheJogadores(detalhe.jogo);
+    mostrarDetalhe(true);
+    var sec=R("secDetalheJogo");if(sec)sec.scrollIntoView({behavior:"smooth",block:"start"})
+  }).catch(function(e){console.error("[Racha] detalhe:",e);toast("Erro ao abrir jogo.","err")})
+}
+
+function voltarResumo(){
+  mostrarDetalhe(false);
+  detalhe={jogoIndex:null,jogo:null,jogadorIndex:null,jogadorOriginal:null,despesasOriginal:null,editavel:false};
+  carregarResumo();
+  var sec=R("secResumo");if(sec)sec.scrollIntoView({behavior:"smooth",block:"start"})
+}
+
+function recalcularTotaisJogo(jogo){
+  var totalRec=0;
+  if(Array.isArray(jogo.jogadores)){
+    for(var i=0;i<jogo.jogadores.length;i++){
+      var p=jogo.jogadores[i];
+      p.mensalidade=Number(p.mensalidade)||0;p.diaria=Number(p.diaria)||0;p.receita=p.mensalidade+p.diaria;totalRec+=p.receita
+    }
+  }
+  jogo.totalDesp=(Number(jogo.pagtoJuiz)||0)+(Number(jogo.goleiro)||0)+(Number(jogo.aluguelCampo)||0)+(Number(jogo.material)||0)+(Number(jogo.outrosGastos)||0);
+  jogo.totalRec=totalRec;jogo.saldo=totalRec-jogo.totalDesp
+}
+
 function adicionarJogador(){
   if(!validaDataJogo(true)){atualizaBloqueioDataJogo();var ed=R("dataJogo");if(ed)ed.focus();return}
   var nome=(V("nomeJog")||"").trim();
-  var posicao=(V("posJog")||"").trim();
   if(!nome){toast("Informe o nome do jogador.","avs");var en=R("nomeJog");if(en)en.focus();return}
-  if(!posicao){toast("Selecione a posicao do jogador.","avs");var ep=R("posJog");if(ep)ep.focus();return}
+  if(!validaPosicao("posJog",true)){var ep=R("posJog");if(ep)ep.focus();return}
   if(!validaValores(CAMPOS_RECEITA,true))return;
-  var telVal=V("telJog")||"";
-  var resTel=validaCel(telVal);
+  var telVal=V("telJog")||"",resTel=validaCel(telVal);
   aplicaFeedback(resTel);
   if(!resTel.ok){toast("Celular invalido. Corrija antes de adicionar.","err");var et=R("telJog");if(et)et.focus();return}
-  var mens=Number(V("mensalidade"))||0;
-  var diar=Number(V("diaria"))||0;
-  jogadores.push({
-    nome:nome,celular:resTel.vazio?"":telVal.trim(),
-    posicao:posicao,
-    mensalidade:mens,diaria:diar,receita:mens+diar
-  });
-  SV("nomeJog","");SV("posJog","");SV("mensalidade","0");SV("diaria","0");
-  ST("prevReceita",moeda(0));resetCelular();
-  renderJog();toast('"'+nome+'" adicionado!','ok');
+  var mens=Number(V("mensalidade"))||0,diar=Number(V("diaria"))||0;
+  jogadores.push({nome:nome,celular:resTel.vazio?"":telVal.trim(),posicao:(V("posJog")||"").trim(),mensalidade:mens,diaria:diar,receita:mens+diar});
+  SV("nomeJog","");SV("posJog","");SV("mensalidade","0");SV("diaria","0");aplicaValorOk("posJog");
+  ST("prevReceita",moeda(0));resetCelular();renderJog();toast('"'+nome+'" adicionado!','ok');
   var en2=R("nomeJog");if(en2)en2.focus()
 }
 
 function salvarJogo(){
-  var dataJogo=V("dataJogo"),numJogo=V("numJogo");
+  var dataJogo=V("dataJogo"),horaJogo=V("horaJogo");
   if(!dataJogo){toast("Informe a data do jogo.","err");var e1=R("dataJogo");if(e1)e1.focus();return}
   if(!validaDataJogo(true)){atualizaBloqueioDataJogo();var ed=R("dataJogo");if(ed)ed.focus();return}
-  if(!numJogo||Number(numJogo)<1){toast("Informe o numero do jogo.","err");var e2=R("numJogo");if(e2)e2.focus();return}
+  if(!validaHoraJogo(true)){var eh=R("horaJogo");if(eh)eh.focus();return}
+  horaJogo=V("horaJogo");
   if(!validaValores(CAMPOS_VALOR,true))return;
   if(jogadores.length===0){toast("Adicione pelo menos um jogador.","err");return}
-  var pj=Number(V("pagtoJuiz"))||0,gol=Number(V("goleiro"))||0,ac=Number(V("aluguelCampo"))||0;
-  var mat=Number(V("material"))||0,og=Number(V("outrosGastos"))||0;
+  var pj=Number(V("pagtoJuiz"))||0,gol=Number(V("goleiro"))||0,ac=Number(V("aluguelCampo"))||0,mat=Number(V("material"))||0,og=Number(V("outrosGastos"))||0;
   var totalDesp=pj+gol+ac+mat+og,totalRec=0;
-  for(var i=0;i<jogadores.length;i++)totalRec+=jogadores[i].receita;
-  var jogo={
-    id:Date.now(),dataJogo:dataJogo,numJogo:Number(numJogo),
-    pagtoJuiz:pj,goleiro:gol,aluguelCampo:ac,material:mat,outrosGastos:og,
-    descOutros:(V("descOutros")||"").trim()||null,
-    obs:(V("obsJogo")||"").trim()||null,
-    totalDesp:totalDesp,totalRec:totalRec,saldo:totalRec-totalDesp,
-    criadoEm:new Date().toISOString(),
-    jogadores:JSON.parse(JSON.stringify(jogadores))
-  };
+  for(var i=0;i<jogadores.length;i++)totalRec+=Number(jogadores[i].receita)||0;
+  var chave=dataJogo+"|"+horaJogo;
+  var jogo={id:Date.now(),chaveJogo:chave,dataJogo:dataJogo,horaJogo:horaJogo,pagtoJuiz:pj,goleiro:gol,aluguelCampo:ac,material:mat,outrosGastos:og,descOutros:(V("descOutros")||"").trim()||null,obs:(V("obsJogo")||"").trim()||null,totalDesp:totalDesp,totalRec:totalRec,saldo:totalRec-totalDesp,criadoEm:new Date().toISOString(),jogadores:JSON.parse(JSON.stringify(jogadores))};
   localforage.getItem("lista").then(function(lista){
-    var arr=Array.isArray(lista)?lista:[];arr.push(jogo);
-    return localforage.setItem("lista",arr)
-  }).then(function(){
-    toast("Jogo salvo com sucesso!","ok");limpar();carregarResumo()
-  }).catch(function(e){console.error("[Racha] salvar:",e);toast("Erro ao salvar.","err")})
+    var arr=Array.isArray(lista)?lista:[];
+    for(var i=0;i<arr.length;i++){if(chaveJogo(arr[i])===chave)throw new Error("CHAVE_DUPLICADA")}
+    arr.push(jogo);return localforage.setItem("lista",arr)
+  }).then(function(){toast("Jogo salvo com sucesso!","ok");limpar();carregarResumo()}).catch(function(e){
+    if(e&&e.message==="CHAVE_DUPLICADA"){toast("Ja existe um jogo salvo para esta data e horario.","err");var eh=R("horaJogo");if(eh)eh.focus();return}
+    console.error("[Racha] salvar:",e);toast("Erro ao salvar.","err")
+  })
+}
+
+function salvarJogadorDetalhe(){
+  if(!detalhe.editavel||!edicaoLiberada(detalhe.jogo)){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+  if(detalhe.jogoIndex===null||detalhe.jogadorIndex===null){toast("Selecione um jogador.","avs");return}
+  var nome=(V("detNomeJog")||"").trim();
+  if(!nome){toast("Informe o nome do jogador.","avs");var en=R("detNomeJog");if(en)en.focus();return}
+  if(!validaPosicao("detPosJog",true)){var ep=R("detPosJog");if(ep)ep.focus();return}
+  if(!validaValores(CAMPOS_DET_RECEITA,true))return;
+  var telVal=V("detTelJog")||"",resTel=validaCel(telVal);
+  aplicaFeedbackDetalhe(resTel);
+  if(!resTel.ok){toast("Celular invalido. Corrija antes de salvar.","err");var et=R("detTelJog");if(et)et.focus();return}
+  var dados=dadosFormDetalhe();
+  dados.celular=resTel.vazio?"":telVal.trim();dados.receita=dados.mensalidade+dados.diaria;
+  localforage.getItem("lista").then(function(lista){
+    var arr=Array.isArray(lista)?lista:[],jogo=arr[detalhe.jogoIndex];
+    if(!jogo||!Array.isArray(jogo.jogadores)||!jogo.jogadores[detalhe.jogadorIndex])throw new Error("Jogo ou jogador nao encontrado");
+    if(!edicaoLiberada(jogo))throw new Error("PRAZO_EDICAO");
+    jogo.jogadores[detalhe.jogadorIndex]=dados;recalcularTotaisJogo(jogo);jogo.atualizadoEm=new Date().toISOString();arr[detalhe.jogoIndex]=jogo;
+    return localforage.setItem("lista",arr).then(function(){return jogo})
+  }).then(function(jogo){
+    detalhe.jogo=JSON.parse(JSON.stringify(jogo));selecionarJogadorDetalhe(detalhe.jogadorIndex);carregarResumo();toast("Jogador salvo com sucesso!","ok")
+  }).catch(function(e){
+    if(e&&e.message==="PRAZO_EDICAO"){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+    console.error("[Racha] salvar jogador:",e);toast("Erro ao salvar jogador.","err")
+  })
+}
+
+function salvarDespesasDetalhe(){
+  if(!detalhe.editavel||!edicaoLiberada(detalhe.jogo)){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+  if(detalhe.jogoIndex===null){toast("Selecione um jogo.","avs");return}
+  if(!validaValores(CAMPOS_DET_DESPESA,true))return;
+  var dados=dadosDespesasDetalhe();
+  localforage.getItem("lista").then(function(lista){
+    var arr=Array.isArray(lista)?lista:[],jogo=arr[detalhe.jogoIndex];
+    if(!jogo)throw new Error("Jogo nao encontrado");
+    if(!edicaoLiberada(jogo))throw new Error("PRAZO_EDICAO");
+    jogo.pagtoJuiz=dados.pagtoJuiz;jogo.goleiro=dados.goleiro;jogo.aluguelCampo=dados.aluguelCampo;jogo.material=dados.material;jogo.outrosGastos=dados.outrosGastos;
+    jogo.descOutros=dados.descOutros||null;jogo.obs=dados.obs||null;recalcularTotaisJogo(jogo);jogo.atualizadoEm=new Date().toISOString();arr[detalhe.jogoIndex]=jogo;
+    return localforage.setItem("lista",arr).then(function(){return jogo})
+  }).then(function(jogo){
+    detalhe.jogo=JSON.parse(JSON.stringify(jogo));carregarDespesasDetalhe(detalhe.jogo);aplicarPermissaoDetalhe();carregarResumo();toast("Despesas salvas com sucesso!","ok")
+  }).catch(function(e){
+    if(e&&e.message==="PRAZO_EDICAO"){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+    console.error("[Racha] salvar despesas:",e);toast("Erro ao salvar despesas.","err")
+  })
+}
+
+function adicionarJogadorDetalhe(){
+  if(!detalhe.editavel||!edicaoLiberada(detalhe.jogo)){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+  if(detalhe.jogoIndex===null){toast("Selecione um jogo.","avs");return}
+  var nome=(V("detNovoNomeJog")||"").trim();
+  if(!nome){toast("Informe o nome do jogador.","avs");var en=R("detNovoNomeJog");if(en)en.focus();return}
+  if(!validaPosicao("detNovoPosJog",true)){var ep=R("detNovoPosJog");if(ep)ep.focus();return}
+  if(!validaValores(CAMPOS_DET_NOVO_RECEITA,true))return;
+  var telVal=V("detNovoTelJog")||"",resTel=validaCel(telVal);
+  aplicaFeedbackCelular("detNovoTelJog","detNovoFbTel",resTel);
+  if(!resTel.ok){toast("Celular invalido. Corrija antes de adicionar.","err");var et=R("detNovoTelJog");if(et)et.focus();return}
+  var mens=Number(V("detNovoMensalidade"))||0,diar=Number(V("detNovoDiaria"))||0;
+  var novo={nome:nome,celular:resTel.vazio?"":telVal.trim(),posicao:(V("detNovoPosJog")||"").trim(),mensalidade:mens,diaria:diar,receita:mens+diar};
+  localforage.getItem("lista").then(function(lista){
+    var arr=Array.isArray(lista)?lista:[],jogo=arr[detalhe.jogoIndex];
+    if(!jogo)throw new Error("Jogo nao encontrado");
+    if(!edicaoLiberada(jogo))throw new Error("PRAZO_EDICAO");
+    if(!Array.isArray(jogo.jogadores))jogo.jogadores=[];
+    jogo.jogadores.push(novo);recalcularTotaisJogo(jogo);jogo.atualizadoEm=new Date().toISOString();arr[detalhe.jogoIndex]=jogo;
+    return localforage.setItem("lista",arr).then(function(){return jogo})
+  }).then(function(jogo){
+    detalhe.jogo=JSON.parse(JSON.stringify(jogo));limparJogadorDetalhe();limparNovoJogadorDetalhe();renderDetalheJogadores(detalhe.jogo);carregarDespesasDetalhe(detalhe.jogo);aplicarPermissaoDetalhe();carregarResumo();
+    toast('"'+nome+'" adicionado!','ok');var en2=R("detNovoNomeJog");if(en2&&detalhe.editavel)en2.focus()
+  }).catch(function(e){
+    if(e&&e.message==="PRAZO_EDICAO"){aplicarPermissaoDetalhe();toast("Prazo de edicao encerrado.","err");return}
+    console.error("[Racha] adicionar jogador:",e);toast("Erro ao adicionar jogador.","err")
+  })
 }
 
 function limpar(){
-  ["dataJogo","numJogo","descOutros","obsJogo","nomeJog","posJog"].forEach(function(id){SV(id,"")});
+  ["dataJogo","horaJogo","descOutros","obsJogo","nomeJog","posJog"].forEach(function(id){SV(id,"")});
   ["pagtoJuiz","goleiro","aluguelCampo","material","outrosGastos","mensalidade","diaria"].forEach(function(id){SV(id,"0")});
   CAMPOS_VALOR.forEach(function(id){aplicaValorOk(id)});
-  ST("totalDespesas",moeda(0));ST("prevReceita",moeda(0));
-  resetCelular();jogadores=[];renderJog();atualizaBloqueioDataJogo()
+  var hj=R("horaJogo");if(hj){hj.classList.remove("ferr");hj.setCustomValidity("")}
+  ST("totalDespesas",moeda(0));ST("prevReceita",moeda(0));resetCelular();jogadores=[];renderJog();atualizaBloqueioDataJogo()
 }
 
 function carregarResumo(){
   localforage.getItem("lista").then(function(lista){
-
-    var arr = Array.isArray(lista) ? lista : [];
-
-    var agrupados = {};
-
-    arr.forEach(function(jogo){
-
-      var chave = jogo.dataJogo + "_" + jogo.numJogo;
-
-      if(!agrupados[chave]){
-        agrupados[chave] = {
-          dataJogo: jogo.dataJogo,
-          numJogo: jogo.numJogo,
-          qtd: 0,
-          totalRec: 0,
-          totalDesp: 0,
-          saldo: 0
-        };
+    var arr=Array.isArray(lista)?lista:[];
+    var itens=arr.map(function(jogo,idx){return{jogo:jogo,idx:idx}});
+    itens.sort(function(a,b){
+      a=a.jogo;b=b.jogo;
+      if(a.dataJogo===b.dataJogo){
+        if(horaValida(a.horaJogo)&&horaValida(b.horaJogo))return a.horaJogo<b.horaJogo?1:a.horaJogo>b.horaJogo?-1:0;
+        if(horaValida(a.horaJogo))return -1;
+        if(horaValida(b.horaJogo))return 1;
+        return (Number(b.numJogo)||0)-(Number(a.numJogo)||0)
       }
-
-      agrupados[chave].qtd += 1;
-      agrupados[chave].totalRec += Number(jogo.totalRec || 0);
-      agrupados[chave].totalDesp += Number(jogo.totalDesp || 0);
-      agrupados[chave].saldo += Number(jogo.saldo || 0);
-
+      return a.dataJogo<b.dataJogo?1:-1
     });
-
-    var resumo = Object.values(agrupados);
-
-    resumo.sort(function(a,b){
-      if(a.dataJogo === b.dataJogo){
-        return b.numJogo - a.numJogo;
-      }
-      return a.dataJogo < b.dataJogo ? 1 : -1;
-    });
-
-    var tb = R("tbResumo");
-
-    if(!tb) return;
-
-    tb.innerHTML = "";
-
-    if(resumo.length === 0){
-      tb.innerHTML =
-        '<tr class="emptr">' +
-        '<td colspan="6">' +
-        '<span class="emptico">&#x1F4CB;</span>' +
-        'Nenhum jogo salvo ainda' +
-        '</td>' +
-        '</tr>';
-      return;
+    var tb=R("tbResumo");if(!tb)return;
+    tb.innerHTML="";
+    if(itens.length===0){
+      tb.innerHTML='<tr class="emptr"><td colspan="6"><span class="emptico">&#x1F4CB;</span>Nenhum jogo salvo ainda</td></tr>';return
     }
-
-    resumo.forEach(function(item){
-
-      var s = Number(item.saldo) || 0;
-
-      var sc =
-        s > 0 ? "sp" :
-        s < 0 ? "sn" :
-        "sz";
-
-      var tr = document.createElement("tr");
-
-      tr.innerHTML =
-        '<td style="font-weight:700">' + fData(item.dataJogo) + '</td>' +
-        '<td><span class="bdg bv">Jogo #' + item.numJogo + '</span></td>' +
-        '<td><span class="bdg ba">' + item.qtd + ' registro(s)</span></td>' +
-        '<td class="tn tv">' + moeda(item.totalRec) + '</td>' +
-        '<td class="tn trr">' + moeda(item.totalDesp) + '</td>' +
-        '<td class="tn ' + sc + '">' + moeda(s) + '</td>';
-
-      tb.appendChild(tr);
-
-    });
-
-  }).catch(function(e){
-    console.error("[Racha] resumo:",e);
-    toast("Erro ao carregar jogos.","err");
-  });
+    itens.forEach(function(item){
+      var jogo=item.jogo,s=Number(jogo.saldo)||0,sc=s>0?"sp":s<0?"sn":"sz",nj=Array.isArray(jogo.jogadores)?jogo.jogadores.length:0;
+      var tr=document.createElement("tr");
+      tr.innerHTML='<td style="font-weight:700">'+fData(jogo.dataJogo)+"</td><td></td>"+
+        '<td><span class="bdg ba">'+nj+" jogador(es)</span></td>"+
+        '<td class="tn tv">'+moeda(Number(jogo.totalRec))+"</td>"+
+        '<td class="tn trr">'+moeda(Number(jogo.totalDesp))+"</td>"+
+        '<td class="tn '+sc+'">'+moeda(s)+"</td>";
+      var btn=document.createElement("button");
+      btn.type="button";btn.className="bdg bv jogo-link";btn.textContent=rotuloJogo(jogo);
+      btn.addEventListener("click",function(){abrirDetalheJogo(item.idx)});
+      tr.children[1].appendChild(btn);tb.appendChild(tr)
+    })
+  }).catch(function(e){console.error("[Racha] resumo:",e);toast("Erro ao carregar jogos.","err")})
 }
+
+function ligarMascaraTelefone(id,fbId,callback){
+  var el=R(id);if(!el)return;
+  el.addEventListener("input",function(){
+    this.value=mascara(this.value);
+    var r=validaCel(this.value);
+    aplicaFeedbackCelular(id,fbId,r.vazio?{ok:true,vazio:true,msg:""}:r);
+    if(callback)callback()
+  });
+  el.addEventListener("blur",function(){aplicaFeedbackCelular(id,fbId,validaCel(this.value))});
+  el.addEventListener("paste",function(e){
+    e.preventDefault();
+    var txt=(e.clipboardData||window.clipboardData).getData("text");
+    this.value=mascara(this.value+txt);
+    aplicaFeedbackCelular(id,fbId,validaCel(this.value));
+    if(callback)callback()
+  });
+  el.addEventListener("keydown",function(e){
+    var ok=["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","Home","End"];
+    if(ok.indexOf(e.key)!==-1||e.ctrlKey||e.metaKey)return;
+    if(e.key.length===1&&(e.key<"0"||e.key>"9"))e.preventDefault()
+  })
+}
+
 document.addEventListener("DOMContentLoaded",function(){
   var eData=R("dataJogo");
   if(eData){
     eData.min=hojeISO();
-    eData.addEventListener("input",atualizaBloqueioDataJogo);
-    eData.addEventListener("change",atualizaBloqueioDataJogo)
+    eData.addEventListener("input",function(){validaDataJogo(false);atualizaBloqueioDataJogo();atualizaHoraJogo()});
+    eData.addEventListener("change",function(){validaDataJogo(false);atualizaBloqueioDataJogo();atualizaHoraJogo()});
+    eData.addEventListener("blur",function(){validaDataJogo(true);atualizaHoraJogo()})
   }
-  var elTel=R("telJog");
-  if(elTel){
-    elTel.addEventListener("input",function(){
-      this.value=mascara(this.value);
-      var r=validaCel(this.value);
-      aplicaFeedback(r.vazio?{ok:true,vazio:true,msg:""}:r)
-    });
-    elTel.addEventListener("blur",function(){aplicaFeedback(validaCel(this.value))});
-    elTel.addEventListener("paste",function(e){
+  var horaEl=R("horaJogo");
+  if(horaEl){
+    horaEl.addEventListener("input",function(){this.value=mascaraHora(this.value);atualizaHoraJogo()});
+    horaEl.addEventListener("change",function(){validaHoraJogo(false)});
+    horaEl.addEventListener("blur",function(){validaHoraJogo(true)});
+    horaEl.addEventListener("paste",function(e){
       e.preventDefault();
       var txt=(e.clipboardData||window.clipboardData).getData("text");
-      this.value=mascara(this.value+txt);aplicaFeedback(validaCel(this.value))
+      this.value=mascaraHora(this.value+txt);atualizaHoraJogo()
     });
-    elTel.addEventListener("keydown",function(e){
+    horaEl.addEventListener("keydown",function(e){
       var ok=["Backspace","Delete","Tab","Escape","Enter","ArrowLeft","ArrowRight","Home","End"];
       if(ok.indexOf(e.key)!==-1||e.ctrlKey||e.metaKey)return;
       if(e.key.length===1&&(e.key<"0"||e.key>"9"))e.preventDefault()
     })
   }
-  var bAdd=R("btnAdd");
-  if(bAdd)bAdd.addEventListener("click",function(e){e.preventDefault();adicionarJogador()});
-  var eNome=R("nomeJog");
-  if(eNome)eNome.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();adicionarJogador()}});
-  var bSal=R("btnSalvar");
-  if(bSal)bSal.addEventListener("click",function(e){e.preventDefault();salvarJogo()});
-  var bLim=R("btnLimpar");
-  if(bLim)bLim.addEventListener("click",function(e){e.preventDefault();limpar()});
-  CAMPOS_DESPESA.forEach(function(id){
-    var e=R(id);if(e){
-      e.addEventListener("input",function(){validaValor(id,false);calcDesp()});
-      e.addEventListener("blur",function(){validaValor(id,true)})
-    }
-  });
-  CAMPOS_RECEITA.forEach(function(id){
-    var e=R(id);if(e){
-      e.addEventListener("input",function(){validaValor(id,false);calcPreview()});
-      e.addEventListener("blur",function(){validaValor(id,true)})
-    }
-  });
-  calcDesp();renderJog();atualizaBloqueioDataJogo();carregarResumo()
+  ligarMascaraTelefone("telJog","fbTel");
+  ligarMascaraTelefone("detTelJog","detFbTel",atualizarSalvarDetalhe);
+  ligarMascaraTelefone("detNovoTelJog","detNovoFbTel");
+  var bAdd=R("btnAdd");if(bAdd)bAdd.addEventListener("click",function(e){e.preventDefault();adicionarJogador()});
+  var eNome=R("nomeJog");if(eNome)eNome.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();adicionarJogador()}});
+  var ePos=R("posJog");if(ePos){ePos.addEventListener("change",function(){validaPosicao("posJog",false)});ePos.addEventListener("blur",function(){validaPosicao("posJog",true)})}
+  var bSal=R("btnSalvar");if(bSal)bSal.addEventListener("click",function(e){e.preventDefault();salvarJogo()});
+  var bLim=R("btnLimpar");if(bLim)bLim.addEventListener("click",function(e){e.preventDefault();limpar()});
+  var bVoltar=R("btnVoltarResumo");if(bVoltar)bVoltar.addEventListener("click",function(e){e.preventDefault();voltarResumo()});
+  var bSalDet=R("btnSalvarJogadorDetalhe");if(bSalDet)bSalDet.addEventListener("click",function(e){e.preventDefault();salvarJogadorDetalhe()});
+  var bSalDesp=R("btnSalvarDespesasDetalhe");if(bSalDesp)bSalDesp.addEventListener("click",function(e){e.preventDefault();salvarDespesasDetalhe()});
+  var bAddDet=R("btnAddJogadorDetalhe");if(bAddDet)bAddDet.addEventListener("click",function(e){e.preventDefault();adicionarJogadorDetalhe()});
+  CAMPOS_DESPESA.forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){validaValor(id,false);calcDesp()});e.addEventListener("blur",function(){validaValor(id,true)})}});
+  CAMPOS_RECEITA.forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){validaValor(id,false);calcPreview()});e.addEventListener("blur",function(){validaValor(id,true)})}});
+  CAMPOS_DET_DESPESA.forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){validaValor(id,false);calcDespDetalhe();atualizarSalvarDespesasDetalhe()});e.addEventListener("blur",function(){validaValor(id,true)})}});
+  ["detDescOutros","detObsJogo"].forEach(function(id){var e=R(id);if(e)e.addEventListener("input",function(){atualizarSalvarDespesasDetalhe()})});
+  ["detNomeJog","detPosJog"].forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){atualizarSalvarDetalhe()});e.addEventListener("change",function(){if(id==="detPosJog")validaPosicao(id,false);atualizarSalvarDetalhe()});e.addEventListener("blur",function(){if(id==="detPosJog")validaPosicao(id,true)});e.addEventListener("keydown",function(ev){var btn=R("btnSalvarJogadorDetalhe");if(ev.key==="Enter"&&btn&&!btn.disabled){ev.preventDefault();salvarJogadorDetalhe()}})}});
+  CAMPOS_DET_RECEITA.forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){validaValor(id,false);calcPreviewDetalhe();atualizarSalvarDetalhe()});e.addEventListener("blur",function(){validaValor(id,true)})}});
+  var eNovoNome=R("detNovoNomeJog");if(eNovoNome)eNovoNome.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();adicionarJogadorDetalhe()}});
+  var eNovoPos=R("detNovoPosJog");if(eNovoPos){eNovoPos.addEventListener("change",function(){validaPosicao("detNovoPosJog",false)});eNovoPos.addEventListener("blur",function(){validaPosicao("detNovoPosJog",true)})}
+  CAMPOS_DET_NOVO_RECEITA.forEach(function(id){var e=R(id);if(e){e.addEventListener("input",function(){validaValor(id,false);calcPreviewNovoDetalhe()});e.addEventListener("blur",function(){validaValor(id,true)})}});
+  calcDesp();renderJog();atualizaBloqueioDataJogo();atualizaHoraJogo();carregarResumo()
 });
 
 })();
